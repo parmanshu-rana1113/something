@@ -49,7 +49,12 @@ export default function NavigationWrapper() {
 
   // Track slide change
   useEffect(() => {
-    fetch(`/api/track?slide=${currentSlide + 1}`).catch(console.error);
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      fetch(`/api/track?slide=${currentSlide + 1}&tz=${encodeURIComponent(tz)}`).catch(console.error);
+    } catch (e) {
+      fetch(`/api/track?slide=${currentSlide + 1}`).catch(console.error);
+    }
   }, [currentSlide]);
 
   const CurrentSlideComponent = slides[currentSlide];

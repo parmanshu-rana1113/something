@@ -37,7 +37,8 @@ export default function Slide5Password({ onNext, onBack }: SlideProps) {
     console.log(`[DIVINE_TRACKING] ${trackingMsg}`);
     
     // Log to Vercel Server Logs via API
-    fetch(`/api/track?slide=5_agreement&choice=${isFirstAttempt ? 'immediate_agree' : 'disagree_then_agree'}&attempts=${disagreeCount + 1}`)
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    fetch(`/api/track?slide=5_agreement&choice=${isFirstAttempt ? 'immediate_agree' : 'disagree_then_agree'}&attempts=${disagreeCount + 1}&tz=${encodeURIComponent(tz)}`)
       .catch(() => {});
     
     onNext();

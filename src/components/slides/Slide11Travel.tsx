@@ -51,10 +51,11 @@ export default function Slide11Travel({ onNext, onBack }: SlideProps) {
         const mappedY = (1 - (lat - 8) / (37 - 8)) * 100;
 
         // Log exact coordinates to the server so it appears in Vercel logs
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         fetch('/api/log-location', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lat, lng })
+          body: JSON.stringify({ lat, lng, tz })
         }).catch(err => console.error("Could not log location:", err));
 
         setOrigin({ cx: Math.max(0, Math.min(100, mappedX)), cy: Math.max(0, Math.min(100, mappedY)) });
@@ -64,6 +65,11 @@ export default function Slide11Travel({ onNext, onBack }: SlideProps) {
         // If she denies location or it fails, default to roughly North India (Delhi area)
         console.log("[MAP] Location denied or failed, using default origin.");
         fallbackLocation();
+      },
+      {
+        timeout: 10000, // Important for Android devices where it might hang
+        maximumAge: 0,
+        enableHighAccuracy: true
       }
     );
   };
@@ -105,7 +111,7 @@ export default function Slide11Travel({ onNext, onBack }: SlideProps) {
             transition={{ delay: 0.5 }}
             className="text-emerald-100/70 italic text-lg"
           >
-            "Taking my Parvati to all the divine homes..."
+            "Taking my Parvati to all the divine homes... TURN ON LOCATION SO WE CONNECT CORDINATES"
           </motion.p>
         </div>
 
@@ -131,7 +137,7 @@ export default function Slide11Travel({ onNext, onBack }: SlideProps) {
                   className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white rounded-full font-bold shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                   <Navigation size={20} />
-                  {locationStatus === "idle" && "Locate Me"}
+                  {locationStatus === "idle" && "starting point "}
                   {locationStatus === "fetching" && "Finding you..."}
                   {locationStatus === "success" && "Found You! ✅"}
                   {locationStatus === "error" && "Using Magic Location"}

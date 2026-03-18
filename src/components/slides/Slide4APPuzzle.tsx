@@ -25,9 +25,6 @@ export default function Slide4APPuzzle({ onNext, onBack }: SlideProps) {
         spread: 70,
         origin: { y: 0.6 }
       });
-      setTimeout(() => {
-        onNext();
-      }, 30000);
     } else {
       setError(true);
       setTimeout(() => setError(false), 1000);
